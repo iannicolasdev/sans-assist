@@ -1,0 +1,19 @@
+# Python
+**/.venv/
+**/__pycache__/
+*.py[cod]
+backend/instance/
+backend/dev-certs/
+
+# Local configuration and credentials
+.env
+.env.*
+firmware/include/secrets.h
+**/local.properties
+
+# Generated builds and IDE files
+firmware/.pio/
+**/.gradle/
+**/build/
+**/.vscode/
+.idea/

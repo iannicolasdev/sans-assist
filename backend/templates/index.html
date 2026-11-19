@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f5">
+    <meta
+      name="description"
+      content="Painel acessível de notificações sonoras do projeto SANS."
+    >
+    <title>SANS — Eventos sonoros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="SANS, página inicial">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <span>SANS</span>
+        </a>
+        <div class="connection" id="connection" data-state="loading" role="status" aria-live="polite">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="connection-label">Conectando ao sistema...</span>
+        </div>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Sistema de Acessibilidade e Notificação Sonora</p>
+        <h1 id="page-title">Eventos sonoros</h1>
+        <p class="intro-copy">
+          Acompanhe os sons detectados pelos dispositivos SANS.
+        </p>
+      </section>
+
+      <section class="events-panel" aria-labelledby="events-title">
+        <div class="simulator-panel" aria-labelledby="simulator-title">
+          <div class="simulator-copy">
+            <h2 id="simulator-title">Demonstrar sem microfone</h2>
+            <p>Escolha um som simulado para testar o ESP32, os LEDs e o histórico.</p>
+            <p class="simulation-note">
+              Simulação manual: não há captura ou reconhecimento real de áudio. A confiança enviada é apenas ilustrativa.
+            </p>
+          </div>
+          <form class="simulator-form" id="simulator-form">
+            <label for="simulated-event">Evento para simular</label>
+            <div class="simulator-controls">
+              <select id="simulated-event" name="event" required>
+                <option value="doorbell">Campainha</option>
+                <option value="dog_barking">Cachorro latindo</option>
+                <option value="cat_meowing">Miado de gato</option>
+                <option value="clapping">Palmas</option>
+                <option value="alarm">Alarme</option>
+              </select>
+              <button class="simulate-button" id="simulate-button" type="submit">
+                Enviar teste
+              </button>
+            </div>
+            <p class="simulation-feedback" id="simulation-feedback" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
+
+        <div class="panel-heading">
+          <div>
+            <h2 id="events-title">Histórico recente</h2>
+            <p class="panel-caption" id="event-count">Carregando eventos...</p>
+          </div>
+          <button class="refresh-button" id="refresh-button" type="button">
+            <span aria-hidden="true">↻</span>
+            Atualizar
+          </button>
+        </div>
+
+        <p class="feedback-message" id="feedback" role="status" aria-live="polite" hidden></p>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="empty-icon" aria-hidden="true">♪</span>
+          <h3>Nenhum evento por aqui</h3>
+          <p>Quando um som for detectado, a notificação aparecerá nesta lista.</p>
+        </div>
+
+        <ol class="event-list" id="event-list" aria-label="Eventos sonoros recebidos"></ol>
+      </section>
+
+      <footer class="page-footer">
+        <span class="footer-mark" aria-hidden="true">S</span>
+        <p>Notificações claras para um ambiente mais acessível.</p>
+        <span class="auto-refresh">Atualização automática a cada 5 segundos</span>
+      </footer>
+    </main>
+  </body>
+</html>

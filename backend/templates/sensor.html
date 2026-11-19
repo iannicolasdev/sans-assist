@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f5">
+    <title>SANS — Celular sensor</title>
+    <style>
+      :root { --bg:#f5f7f5; --card:#fff; --ink:#17231c; --muted:#5a6b60; --line:#d6ddd8; --ok:#1f7a45; --warn:#9a6a00; --bad:#b3261e; --brand:#1f6f4a; }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg:#101612; --card:#18211b; --ink:#eef3ef; --muted:#9db0a3; --line:#2b3a30; --ok:#5cc98a; --warn:#e0b04a; --bad:#ff8a80; --brand:#4fb883; }
+      }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--ink); line-height:1.45; }
+      main { max-width: 640px; margin: 0 auto; padding: 16px; display:grid; gap:14px; }
+      h1 { font-size: 1.4rem; margin: 4px 0 0; }
+      p { margin: 0; }
+      .muted { color: var(--muted); font-size: .92rem; }
+      .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; display:grid; gap:10px; }
+      button { font: inherit; font-weight:700; border:0; border-radius:12px; padding:16px; background:var(--brand); color:#fff; width:100%; }
+      button[data-on="true"] { background: var(--bad); }
+      button:disabled { opacity:.6; }
+      .status { display:flex; align-items:center; gap:8px; font-weight:700; }
+      .dot { width:12px; height:12px; border-radius:50%; background:var(--muted); }
+      .status[data-state="on"] .dot { background:var(--ok); }
+      .status[data-state="loading"] .dot { background:var(--warn); }
+      .status[data-state="error"] .dot { background:var(--bad); }
+      .meter { height:14px; background:var(--line); border-radius:8px; overflow:hidden; }
+      .meter > div { height:100%; width:0; background:var(--brand); transition: width .08s linear; }
+      .last { font-size:1.5rem; font-weight:800; }
+      ul { list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+      li { display:flex; justify-content:space-between; gap:8px; font-size:.95rem; }
+      #log li[data-ok="false"] { color: var(--bad); }
+      label { font-weight:600; }
+      input[type=range] { width:100%; }
+      .alert { border-left:5px solid var(--bad); padding:10px 12px; background:var(--card); border-radius:8px; }
+      a { color: var(--brand); font-weight:600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SANS · Celular sensor</h1>
+      <p class="muted">Este celular classifica o som aqui mesmo e envia só o <strong>evento</strong> ao Flask. O áudio nunca sai do aparelho.</p>
+
+      <div class="alert" id="insecure" hidden>
+        <strong>Microfone bloqueado pelo navegador.</strong>
+        <p>O navegador só libera o microfone em páginas HTTPS. Abra esta página pelo endereço HTTPS exibido pelo túnel Cloudflare e termine o endereço com <code>/sensor</code>.</p>
+      </div>
+
+      <section class="card">
+        <div class="status" id="status" data-state="idle" role="status" aria-live="polite">
+          <span class="dot" aria-hidden="true"></span><span id="status-text">Parado</span>
+        </div>
+        <button id="toggle" type="button" data-on="false">Iniciar monitoramento</button>
+        <div class="meter" aria-hidden="true"><div id="level"></div></div>
+        <p class="muted">Mantenha a tela ligada e esta aba aberta: navegadores pausam o microfone em segundo plano.</p>
+      </section>
+
+      <section class="card" aria-live="polite">
+        <p class="muted">Último evento enviado</p>
+        <p class="last" id="last">—</p>
+        <p class="muted" id="last-detail"></p>
+      </section>
+
+      <section class="card">
+        <label for="threshold">Confiança mínima: <span id="threshold-value">45%</span></label>
+        <input id="threshold" type="range" min="20" max="90" value="45">
+        <p class="muted">Se disparar sem querer, aumente. Se não detectar, diminua. O valor enviado é a confiança real do YAMNet.</p>
+      </section>
+
+      <section class="card">
+        <p class="muted">O que o modelo está ouvindo agora (3 classes mais fortes)</p>
+        <ul id="top3"><li><span>—</span><span></span></li></ul>
+      </section>
+
+      <section class="card">
+        <p class="muted">Envios</p>
+        <ul id="log"></ul>
+      </section>
+
+      <p class="muted"><a href="/">Abrir o painel de eventos</a></p>
+    </main>
+    <script src="{{ url_for('static', filename='sensor.js') }}"></script>
+  </body>
+</html>

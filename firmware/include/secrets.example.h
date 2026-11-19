@@ -1,0 +1,4 @@
+#pragma once
+
+#define SANS_WIFI_SSID "NOME_DA_REDE_2_4_GHZ"
+#define SANS_WIFI_PASSWORD "SENHA_DA_REDE"
